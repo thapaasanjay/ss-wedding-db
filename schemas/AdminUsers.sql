@@ -1,0 +1,30 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AdminUsers](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Email] [nvarchar](256) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[CreatedUtc] [datetime2](0) NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[AdminUsers] ADD PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+ALTER TABLE [dbo].[AdminUsers] ADD UNIQUE NONCLUSTERED 
+(
+	[Email] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[AdminUsers] ADD  CONSTRAINT [DF_AdminUsers_IsActive]  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[AdminUsers] ADD  CONSTRAINT [DF_AdminUsers_CreatedUtc]  DEFAULT (sysutcdatetime()) FOR [CreatedUtc]
+GO
+
+Insert into AdminUsers(Email,IsActive)
+VALUES('thapaasanjay@gmail.com',1)

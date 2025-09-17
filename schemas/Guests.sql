@@ -1,0 +1,45 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Guests](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[FirstName] [nvarchar](100) NOT NULL,
+	[LastName] [nvarchar](100) NOT NULL,
+	[PhoneE164] [nvarchar](32) NOT NULL,
+	[Email] [nvarchar](256) NULL,
+	[CreatedUtc] [datetime2](0) NOT NULL,
+	[UpdatedUtc] [datetime2](0) NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[DeletedUtc] [datetime2](0) NULL,
+	[DeletedBy] [nvarchar](256) NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Guests] ADD PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+CREATE NONCLUSTERED INDEX [IX_Guests_LastFirst] ON [dbo].[Guests]
+(
+	[LastName] ASC,
+	[FirstName] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UX_Guests_PhoneE164_Active] ON [dbo].[Guests]
+(
+	[PhoneE164] ASC
+)
+WHERE ([IsDeleted]=(0))
+WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Guests] ADD  CONSTRAINT [DF_Guests_CreatedUtc]  DEFAULT (sysutcdatetime()) FOR [CreatedUtc]
+GO
+ALTER TABLE [dbo].[Guests] ADD  CONSTRAINT [DF_Guests_UpdatedUtc]  DEFAULT (sysutcdatetime()) FOR [UpdatedUtc]
+GO
+ALTER TABLE [dbo].[Guests] ADD  CONSTRAINT [DF_Guests_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
+GO
